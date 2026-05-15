@@ -1,0 +1,22 @@
+name: apply-hub-config
+
+on:
+  workflow_dispatch:
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-kubectl@v4
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "$KUBECONFIG_B64" | base64 -d > "$HOME/.kube/config"
+        env:
+          KUBECONFIG_B64: ${{ secrets.KAPRO_HUB_KUBECONFIG_B64 }}
+      - run: kubectl apply -f clusters/
+      - run: kubectl apply -f bundles/
+      - run: kubectl apply -f pipelines/
+      - run: kubectl apply -f releases/
+
