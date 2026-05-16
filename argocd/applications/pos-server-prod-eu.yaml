@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pos-server-prod-eu
+  namespace: argocd
+  labels:
+    kapro.io/import: "true"
+    kapro.io/managed-by: kapro
+    kapro.io/authorized-source: checkout
+    team: checkout
+    service: pos-server
+    region: europe-west3
+spec:
+  project: checkout
+  destination:
+    name: prod-eu
+    namespace: workloads
+  source:
+    repoURL: oci://registry.example.com/retail/charts
+    chart: pos-server
+    targetRevision: "5.27.0"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

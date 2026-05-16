@@ -1,0 +1,22 @@
+apiVersion: kapro.io/v1alpha1
+kind: PromotionSource
+metadata:
+  name: checkout
+spec:
+  backendRef: argo
+  units:
+    - name: pos-server
+      backendKind: ArgoApplicationSource
+      namespace: argocd
+      sourcePath: argocd/applications/pos-server-prod-eu.yaml
+      versionField: spec.source.targetRevision
+    - name: sdc
+      backendKind: GitJSONField
+      namespace: argocd
+      sourcePath: argocd/applicationsets/store-platform.yaml
+      versionField: argocd/environments/*.json:sdcVersion
+    - name: keycloak
+      backendKind: GitJSONField
+      namespace: argocd
+      sourcePath: argocd/applicationsets/store-platform.yaml
+      versionField: argocd/environments/*.json:keycloakVersion

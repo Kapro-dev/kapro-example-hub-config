@@ -6,10 +6,11 @@ metadata:
     kapro.io/tier: production
     kapro.io/region: us-central1
 spec:
-  actuator:
+  delivery:
     mode: pull
-    backend: flux
-    pull:
-      ociRepository: app-bundle
-      namespace: flux-system
-
+    backendRef: argo
+    parameters:
+      namespace: argocd
+      applicationSelector.pos-server: service=pos-server,region=us-central1
+      applicationSelector.sdc: service=sdc,region=us-central1
+      applicationSelector.keycloak: service=keycloak,region=us-central1

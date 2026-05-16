@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: store-platform
+  namespace: argocd
+  labels:
+    kapro.io/import: "true"
+    team: checkout
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/Kapro-dev/kapro-example-hub-config.git
+        revision: main
+        files:
+          - path: argocd/environments/*.json
+  template:
+    metadata:
+      name: "store-platform-{{env}}"
+      labels:
+        kapro.io/import: "true"
+        kapro.io/managed-by: kapro
+        kapro.io/authorized-source: checkout
+        team: checkout
+        service: sdc
+        region: "{{region}}"
+    spec:
+      project: checkout
+      destination:
+        name: "{{cluster}}"
+        namespace: workloads
+      sources:
+        - repoURL: oci://registry.example.com/retail/charts
+          chart: sdc
+          targetRevision: "{{sdcVersion}}"
+        - repoURL: oci://registry.example.com/retail/charts
+          chart: keycloak
+          targetRevision: "{{keycloakVersion}}"

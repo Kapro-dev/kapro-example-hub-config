@@ -16,7 +16,7 @@ jobs:
         env:
           KUBECONFIG_B64: ${{ secrets.KAPRO_HUB_KUBECONFIG_B64 }}
       - run: kubectl apply -f clusters/
-      - run: kubectl apply -f bundles/
+      - run: kubectl apply -f backends/
+      - run: kubectl apply -f sources/
       - run: kubectl apply -f pipelines/
       - run: kubectl apply -f releases/
-
